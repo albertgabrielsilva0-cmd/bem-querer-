@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<title>Bem Querer Donuts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Everything that blurs/fades together (scroll effects, tap blur)
+     lives inside .page-wrap. Fixed UI (cart drawer, cart FAB, quickview
+     modal) stays OUTSIDE it as a sibling — a filter on an ancestor would
+     otherwise pull position:fixed elements out of the viewport. -->
+<div class="page-wrap" id="page-wrap">
+<div class="hero-block" id="hero-block">
+  <header class="site-nav">
+    <div class="site-nav-inner">
+      <a href="#top" class="nav-logo-link" aria-label="Bem Querer Donuts — início">
+        <img class="nav-logo" src="assets/logo-bem-querer-transparent.png" alt="Bem Querer Donuts Gourmet">
+      </a>
+      <nav class="nav-links">
+        <a href="#top" class="active" id="nav-home">Home</a>
+        <a href="#top5" id="nav-cardapio">Cardápio</a>
+        <a href="https://wa.me/5519982312764" target="_blank" rel="noopener noreferrer" id="nav-contact">Contato</a>
+      </nav>
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar no cardápio" aria-label="Buscar no cardápio">
+      </div>
+      <div class="nav-icons">
+        <button class="icon-btn cart-icon-btn" id="nav-cart-btn" aria-label="Carrinho">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.6a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+    <p class="search-empty" id="search-empty" hidden>Nenhum item encontrado para sua busca.</p>
+  </header>
+
+  <!-- Full-bleed hero, no frame: the photo fills the whole screen, logo
+       on top, headline + glass buttons over the photo at the bottom —
+       built from the client's own mockup. -->
+  <section class="hero" id="top">
+    <img class="hero-bg" src="assets/hero-donut-splash.jpg" alt="" fetchpriority="high">
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-content" id="hero-content">
+      <div class="hero-bottom">
+        <h1 class="hero-title">Apaixone-se<em>a cada mordida</em></h1>
+        <div class="hero-buttons">
+          <a href="https://wa.me/5519982312764" target="_blank" rel="noopener noreferrer" class="btn-glass btn-glass-primary">Peça agora</a>
+          <a href="#top5" class="btn-glass">Ver cardápio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================================================
+     Full real catalog, in the same 8 categories and order as the
+     shop's own ordering site. Each category is a swipeable carousel
+     with a "Ver todos" toggle that expands it into a grid.
+     .catalog-bg is one sticky full-screen photo behind every category,
+     so the translucent cards always have the donut photo behind them
+     (a per-section background would stretch on tall sections and
+     background-attachment:fixed is ignored on phones).
+     ============================================================ -->
+<div class="catalog" id="catalog">
+  <div class="catalog-bg" aria-hidden="true"></div>
+
+  <nav class="category-nav" id="category-nav" aria-label="Categorias do cardápio">
+    <div class="category-nav-inner">
+      <a href="#top5">Donuts Top 5</a>
+      <a href="#combos">Combos Donuts</a>
+      <a href="#com-recheio">Donuts com Recheio</a>
+      <a href="#mini-donuts">Mini Donuts</a>
+      <a href="#bomb">Donuts Bomb</a>
+      <a href="#degustacao">Caixa Degustação</a>
+      <a href="#sem-recheio">Donuts Sem Recheio</a>
+      <a href="#bebidas">Bebidas</a>
+    </div>
+  </nav>
+
+<section class="flavors" id="top5">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Donuts Top 5</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="top5-red-velvet" data-name="Red Velvet" data-price="23.99" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-5-pink-classic.jpg" alt="Red Velvet" loading="lazy"></div>
+          <h4>Red Velvet</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="top5-pistache" data-name="Pistache" data-price="22.99" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Pistache" loading="lazy"></div>
+          <h4>Pistache</h4>
+          <p class="combo-price">R$ 22,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="top5-bem-querer" data-name="Bem Querer" data-price="23.99" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-1-pink-sprinkles.jpg" alt="Bem Querer" loading="lazy"></div>
+          <h4>Bem Querer</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="top5-nutella-morango" data-name="Nutella com Morango" data-price="23.99" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-3-strawberry.jpg" alt="Nutella com Morango" loading="lazy"></div>
+          <h4>Nutella com Morango</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="top5-kinder-bueno" data-name="Kinder Bueno" data-price="23.99" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-4-dunkin-choc.jpg" alt="Kinder Bueno" loading="lazy"></div>
+          <h4>Kinder Bueno</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="combos">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Combos Donuts</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="combo-3x4" data-name="Compre 3 Leve 4" data-price="51.96" data-desc="Compre 3, 5 ou 8 donuts e ganhe donuts grátis no valor de até R$ 12,99.">
+          <div class="combo-photo"><img src="assets/combo-1-box-variado.jpg" alt="Compre 3 Leve 4" loading="lazy"></div>
+          <h4>Compre 3 Leve 4</h4>
+          <p class="combo-price">R$ 51,96</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item combo-item-inquire" data-id="combo-5x6" data-name="Compre 5 Leve 6" data-desc="Compre 3, 5 ou 8 donuts e ganhe donuts grátis no valor de até R$ 12,99.">
+          <div class="combo-photo"><img src="assets/combo-2-box-duck1.jpg" alt="Compre 5 Leve 6" loading="lazy"></div>
+          <h4>Compre 5 Leve 6</h4>
+          <p class="combo-price combo-price-inquire">Consulte o valor</p>
+          <a class="add-to-cart-btn inquire-btn" href="https://wa.me/5519982312764?text=Ol%C3%A1!%20Qual%20o%20valor%20do%20Compre%205%20Leve%206%3F" target="_blank" rel="noopener noreferrer">Perguntar no WhatsApp</a>
+        </div>
+        <div class="combo-item combo-item-inquire" data-id="combo-8x10" data-name="Compre 8 Leve 10" data-desc="Compre 3, 5 ou 8 donuts e ganhe donuts grátis no valor de até R$ 12,99.">
+          <div class="combo-photo"><img src="assets/combo-3-box-duck2.jpg" alt="Compre 8 Leve 10" loading="lazy"></div>
+          <h4>Compre 8 Leve 10</h4>
+          <p class="combo-price combo-price-inquire">Consulte o valor</p>
+          <a class="add-to-cart-btn inquire-btn" href="https://wa.me/5519982312764?text=Ol%C3%A1!%20Qual%20o%20valor%20do%20Compre%208%20Leve%2010%3F" target="_blank" rel="noopener noreferrer">Perguntar no WhatsApp</a>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="com-recheio">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Donuts com Recheio</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="cr-boston-cream" data-name="Boston Cream" data-price="18.99" data-desc="Cobertura: Chocolate meio amargo. Recheio: Creme.">
+          <div class="combo-photo"><img src="assets/top5-4-chocolate-glazed.jpg" alt="Boston Cream" loading="lazy"></div>
+          <h4>Boston Cream</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-kit-kat" data-name="Kit Kat" data-price="18.99" data-desc="Cobertura: Chocolate ao leite com Kit Kat. Recheio: Brigadeiro de Oreo.">
+          <div class="combo-photo"><img src="assets/semrecheio-2-choc-sprinkles.jpg" alt="Kit Kat" loading="lazy"></div>
+          <h4>Kit Kat</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-oreo" data-name="Oreo" data-price="18.99" data-desc="Cobertura: Chocolate branco com pedaços de bolacha Oreo. Recheio: Brigadeiro de Oreo.">
+          <div class="combo-photo"><img src="assets/recheio-1-jelly-top.jpg" alt="Oreo" loading="lazy"></div>
+          <h4>Oreo</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ouro-branco" data-name="Ouro Branco" data-price="22.99" data-desc="Cobertura: Chocolate branco com Ouro Branco. Recheio: Ganache cremoso de Ouro Branco.">
+          <div class="combo-photo"><img src="assets/recheio-3-raspberry-powdered.jpg" alt="Ouro Branco" loading="lazy"></div>
+          <h4>Ouro Branco</h4>
+          <p class="combo-price">R$ 22,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ovomaltine" data-name="Ovomaltine" data-price="22.99" data-desc="Cobertura: Chocolate ao leite com Ovomaltine. Recheio: Nutella.">
+          <div class="combo-photo"><img src="assets/semrecheio-3-glazed-choc.jpg" alt="Ovomaltine" loading="lazy"></div>
+          <h4>Ovomaltine</h4>
+          <p class="combo-price">R$ 22,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ferrero-rocher" data-name="Ferrero Rocher" data-price="24.99" data-desc="Cobertura: Chocolate meio amargo com castanhas e Ferrero Rocher. Recheio: Nutella.">
+          <div class="combo-photo"><img src="assets/bomb-1-cherry-choc.jpg" alt="Ferrero Rocher" loading="lazy"></div>
+          <h4>Ferrero Rocher</h4>
+          <p class="combo-price">R$ 24,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ninho" data-name="Ninho" data-price="18.99" data-desc="Cobertura: Chocolate branco com Ninho. Recheio: Brigadeiro de Ninho.">
+          <div class="combo-photo"><img src="assets/top5-5-pink-classic.jpg" alt="Ninho" loading="lazy"></div>
+          <h4>Ninho</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ninho-morango" data-name="Ninho com Morango" data-price="23.99" data-desc="Cobertura: Ninho em pó, chantininho e morango. Recheio: Brigadeiro de Ninho e morangos picados.">
+          <div class="combo-photo"><img src="assets/bomb-2-sprinklelicious.jpg" alt="Ninho com Morango" loading="lazy"></div>
+          <h4>Ninho com Morango</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-ninho-nutella" data-name="Ninho com Nutella" data-price="22.99" data-desc="Cobertura: Chocolate branco com Ninho. Recheio: Nutella.">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Ninho com Nutella" loading="lazy"></div>
+          <h4>Ninho com Nutella</h4>
+          <p class="combo-price">R$ 22,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-mem" data-name="M&amp;M" data-price="18.99" data-desc="Cobertura: Chocolate ao leite com M&amp;M. Recheio: Brigadeiro.">
+          <div class="combo-photo"><img src="assets/top5-4-chocolate-glazed.jpg" alt="M&amp;M" loading="lazy"></div>
+          <h4>M&amp;M</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="cr-bombuva" data-name="Bombuva" data-price="19.99" data-desc="Cobertura: Ninho em pó, uvas verdes e fios de chocolate branco. Recheio: Brigadeiro de Ninho.">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Bombuva" loading="lazy"></div>
+          <h4>Bombuva</h4>
+          <p class="combo-price">R$ 19,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="mini-donuts">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Mini Donuts</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="md-creme" data-name="Creme" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/bomb-3-caramel.jpg" alt="Creme" loading="lazy"></div>
+          <h4>Creme</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-ninho" data-name="Ninho" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-5-pink-classic.jpg" alt="Ninho" loading="lazy"></div>
+          <h4>Ninho</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-mem" data-name="M&amp;M" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-4-chocolate-glazed.jpg" alt="M&amp;M" loading="lazy"></div>
+          <h4>M&amp;M</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-kit-kat" data-name="Kit Kat" data-price="6.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-2-choc-sprinkles.jpg" alt="Kit Kat" loading="lazy"></div>
+          <h4>Kit Kat</h4>
+          <p class="combo-price">R$ 6,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-pistache" data-name="Pistache" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Pistache" loading="lazy"></div>
+          <h4>Pistache</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-doce-de-leite" data-name="Doce de Leite" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-3-glazed-choc.jpg" alt="Doce de Leite" loading="lazy"></div>
+          <h4>Doce de Leite</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-nutella" data-name="Nutella" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-4-dunkin-choc.jpg" alt="Nutella" loading="lazy"></div>
+          <h4>Nutella</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-oreo" data-name="Oreo" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/recheio-1-jelly-top.jpg" alt="Oreo" loading="lazy"></div>
+          <h4>Oreo</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-ninho-nutella" data-name="Ninho com Nutella" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Ninho com Nutella" loading="lazy"></div>
+          <h4>Ninho com Nutella</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-acucar-canela" data-name="Açúcar e Canela" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/recheio-3-raspberry-powdered.jpg" alt="Açúcar e Canela" loading="lazy"></div>
+          <h4>Açúcar e Canela</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-brigadeiro" data-name="Brigadeiro" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-2-choc-sprinkles.jpg" alt="Brigadeiro" loading="lazy"></div>
+          <h4>Brigadeiro</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-presunto-queijo" data-name="Presunto e Queijo" data-price="6.00" data-desc="">
+          <div class="combo-photo"><img src="assets/bomb-3-caramel.jpg" alt="Presunto e Queijo" loading="lazy"></div>
+          <h4>Presunto e Queijo</h4>
+          <p class="combo-price">R$ 6,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-cheddar-bacon" data-name="Cheddar e Bacon" data-price="6.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-4-chocolate-glazed.jpg" alt="Cheddar e Bacon" loading="lazy"></div>
+          <h4>Cheddar e Bacon</h4>
+          <p class="combo-price">R$ 6,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-glazed" data-name="Glazed" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/recheio-2-jelly-allstars.jpg" alt="Glazed" loading="lazy"></div>
+          <h4>Glazed</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-homer" data-name="Homer" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-1-pink-sprinkles.jpg" alt="Homer" loading="lazy"></div>
+          <h4>Homer</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-kinder-bueno" data-name="Kinder Bueno" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-4-dunkin-choc.jpg" alt="Kinder Bueno" loading="lazy"></div>
+          <h4>Kinder Bueno</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-chocolate" data-name="Chocolate" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-2-chocolate-frosting.jpg" alt="Chocolate" loading="lazy"></div>
+          <h4>Chocolate</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-ovomaltine" data-name="Ovomaltine" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-3-glazed-choc.jpg" alt="Ovomaltine" loading="lazy"></div>
+          <h4>Ovomaltine</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-boston-cream" data-name="Boston Cream" data-price="4.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-4-chocolate-glazed.jpg" alt="Boston Cream" loading="lazy"></div>
+          <h4>Boston Cream</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-fricasse-frango" data-name="Fricassê de Frango" data-price="6.00" data-desc="">
+          <div class="combo-photo"><img src="assets/recheio-3-raspberry-powdered.jpg" alt="Fricassê de Frango" loading="lazy"></div>
+          <h4>Fricassê de Frango</h4>
+          <p class="combo-price">R$ 6,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-nutella-morango" data-name="Nutella com Morango" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/top5-3-strawberry.jpg" alt="Nutella com Morango" loading="lazy"></div>
+          <h4>Nutella com Morango</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-ouro-branco" data-name="Ouro Branco" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/recheio-3-raspberry-powdered.jpg" alt="Ouro Branco" loading="lazy"></div>
+          <h4>Ouro Branco</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-bombuva" data-name="Bombuva" data-price="5.00" data-desc="">
+          <div class="combo-photo"><img src="assets/semrecheio-1-blueberry.jpg" alt="Bombuva" loading="lazy"></div>
+          <h4>Bombuva</h4>
+          <p class="combo-price">R$ 5,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="md-ninho-morango" data-name="Ninho com Morango" data-price="7.00" data-desc="">
+          <div class="combo-photo"><img src="assets/bomb-1-cherry-choc.jpg" alt="Ninho com Morango" loading="lazy"></div>
+          <h4>Ninho com Morango</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="bomb">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Donuts Bomb</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="bomb-creme" data-name="Creme" data-price="18.99" data-desc="Delicioso recheio de creme empanado no açúcar de confeiteiro.">
+          <div class="combo-photo"><img src="assets/bomb-3-caramel.jpg" alt="Creme" loading="lazy"></div>
+          <h4>Creme</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="bomb-doce-leite" data-name="Doce de Leite" data-price="18.99" data-desc="Clássico recheio de doce de leite empanado no açúcar de confeiteiro.">
+          <div class="combo-photo"><img src="assets/semrecheio-3-glazed-choc.jpg" alt="Doce de Leite" loading="lazy"></div>
+          <h4>Doce de Leite</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="bomb-nutella" data-name="Nutella" data-price="23.99" data-desc="Para os amantes de Nutella: recheio de muuuita Nutella e empanado no leite Ninho.">
+          <div class="combo-photo"><img src="assets/semrecheio-4-dunkin-choc.jpg" alt="Nutella" loading="lazy"></div>
+          <h4>Nutella</h4>
+          <p class="combo-price">R$ 23,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="degustacao">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Caixa Degustação</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="deg-12un" data-name="Caixa Degustação 12 unidades" data-price="59.99" data-desc="">
+          <div class="combo-photo"><img src="assets/combo-3-box-duck2.jpg" alt="Caixa Degustação 12 unidades" loading="lazy"></div>
+          <h4>Caixa Degustação 12 unidades</h4>
+          <p class="combo-price">R$ 59,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="deg-netflitz" data-name="Combo Net Flitz" data-price="39.99" data-desc="">
+          <div class="combo-photo"><img src="assets/combo-1-box-variado.jpg" alt="Combo Net Flitz" loading="lazy"></div>
+          <h4>Combo Net Flitz</h4>
+          <p class="combo-price">R$ 39,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="deg-matafome" data-name="Mata Fome 4 unidades" data-price="29.99" data-desc="">
+          <div class="combo-photo"><img src="assets/combo-2-box-duck1.jpg" alt="Mata Fome 4 unidades" loading="lazy"></div>
+          <h4>Mata Fome 4 unidades</h4>
+          <p class="combo-price">R$ 29,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="sem-recheio">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Donuts Sem Recheio</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="sr-glazed" data-name="Glazed - Calda de Açúcar" data-price="12.99" data-desc="Clássico dos Estados Unidos! Cobertura bem fininha de calda de açúcar.">
+          <div class="combo-photo"><img src="assets/recheio-2-jelly-allstars.jpg" alt="Glazed - Calda de Açúcar" loading="lazy"></div>
+          <h4>Glazed - Calda de Açúcar</h4>
+          <p class="combo-price">R$ 12,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="sr-chocolate" data-name="Chocolate" data-price="12.99" data-desc="Cobertura de chocolate ao leite e granulados coloridos.">
+          <div class="combo-photo"><img src="assets/top5-2-chocolate-frosting.jpg" alt="Chocolate" loading="lazy"></div>
+          <h4>Chocolate</h4>
+          <p class="combo-price">R$ 12,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="sr-acucar-canela" data-name="Açúcar e Canela" data-price="12.99" data-desc="A combinação perfeita com um café! Donuts empanado no açúcar canela. Acrescente recheio: Doce de leite por R$ 5,00.">
+          <div class="combo-photo"><img src="assets/recheio-3-raspberry-powdered.jpg" alt="Açúcar e Canela" loading="lazy"></div>
+          <h4>Açúcar e Canela</h4>
+          <p class="combo-price">R$ 12,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="sr-homer" data-name="Homer" data-price="12.99" data-desc="Chocolate branco com corante rosa e granulados coloridos. Acrescente recheio Ninho ou Creme por R$ 5,00, Nutella por R$ 5,00.">
+          <div class="combo-photo"><img src="assets/top5-1-pink-sprinkles.jpg" alt="Homer" loading="lazy"></div>
+          <h4>Homer</h4>
+          <p class="combo-price">R$ 12,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="sr-brigadeiro" data-name="Brigadeiro" data-price="12.99" data-desc="Delicioso brigadeiro de panela com granulados. Acrescente recheio Brigadeiro por R$ 5,00.">
+          <div class="combo-photo"><img src="assets/semrecheio-2-choc-sprinkles.jpg" alt="Brigadeiro" loading="lazy"></div>
+          <h4>Brigadeiro</h4>
+          <p class="combo-price">R$ 12,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="sr-nutella" data-name="Nutella" data-price="18.99" data-desc="A clássica e amada Nutella. Acrescente Nutella por R$ 5,00.">
+          <div class="combo-photo"><img src="assets/semrecheio-4-dunkin-choc.jpg" alt="Nutella" loading="lazy"></div>
+          <h4>Nutella</h4>
+          <p class="combo-price">R$ 18,99</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="bebidas">
+  <div class="flavors-inner">
+    <div class="flavors-header">
+      <h2>Bebidas</h2>
+      <div class="flavors-actions">
+        <div class="carousel-nav">
+          <button type="button" aria-label="Anterior">&#8249;</button>
+          <button type="button" aria-label="Próximo">&#8250;</button>
+        </div>
+        <button type="button" class="view-all-btn">Ver todos</button>
+      </div>
+    </div>
+    <div class="flavors-grid">
+        <div class="combo-item" data-id="beb-agua-com-gas" data-name="Água com Gás" data-price="4.00" data-desc="">
+          <div class="combo-photo combo-photo-icon" style="background: linear-gradient(145deg, #ffd9ea, #ffb6d9);"><span>&#128167;</span></div>
+          <h4>Água com Gás</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="beb-coca-350" data-name="Coca-Cola 350ml" data-price="7.00" data-desc="">
+          <div class="combo-photo combo-photo-icon" style="background: linear-gradient(145deg, #ffd9ea, #ffb6d9);"><span>&#129347;</span></div>
+          <h4>Coca-Cola 350ml</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="beb-coca-zero-350" data-name="Coca-Cola 350ml Zero Açúcar" data-price="7.00" data-desc="">
+          <div class="combo-photo combo-photo-icon" style="background: linear-gradient(145deg, #ffd9ea, #ffb6d9);"><span>&#129347;</span></div>
+          <h4>Coca-Cola 350ml Zero Açúcar</h4>
+          <p class="combo-price">R$ 7,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+        <div class="combo-item" data-id="beb-agua-sem-gas" data-name="Água sem Gás" data-price="4.00" data-desc="">
+          <div class="combo-photo combo-photo-icon" style="background: linear-gradient(145deg, #ffd9ea, #ffb6d9);"><span>&#128167;</span></div>
+          <h4>Água sem Gás</h4>
+          <p class="combo-price">R$ 4,00</p>
+          <button class="add-to-cart-btn">Adicionar</button>
+        </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="promo-banner" id="promo">
+  <div class="promo-banner-inner">
+    <div class="promo-banner-media">
+      <video class="promo-banner-video" autoplay muted loop playsinline poster="assets/promo-poster.jpg">
+        <source src="assets/promo-video.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="promo-banner-text">
+      <span class="promo-banner-eyebrow">Chegou agora</span>
+      <h2>Do forno pra sua casa</h2>
+      <p>Mini donuts artesanais, recheios generosos e aquele capricho de confeitaria — feitos frescos todos os dias.</p>
+      <a href="https://wa.me/5519982312764?text=Oi!%20Vi%20a%20novidade%20no%20site%20e%20quero%20pedir%20a%20minha%20caixinha" target="_blank" rel="noopener noreferrer" class="btn-call">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Garanta a sua caixinha
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-brand">
+      <img src="assets/logo-bem-querer-transparent.png" class="footer-logo" alt="Bem Querer Donuts">
+      <p>Donuts gourmet artesanais, feitos com carinho todos os dias. Peça pelo WhatsApp e receba fresquinho.</p>
+    </div>
+    <div>
+      <h5>Horário</h5>
+      <p>Terça a domingo: 10h às 21h</p>
+      <p>Segunda: 12h às 19h</p>
+    </div>
+    <div>
+      <h5>Contato</h5>
+      <p>Av. Dom Pedro I, 1573 — Ipiranga, Ribeirão Preto - SP</p>
+      <a href="https://wa.me/5519982312764" target="_blank" rel="noopener noreferrer">WhatsApp: (19) 98231-2764</a>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2026 Bem Querer Donuts. Todos os direitos reservados.</p>
+</footer>
+
+</div>
+<!-- .page-wrap ends here — everything below is fixed UI, deliberately
+     OUTSIDE .page-wrap so the nav/hero blur-on-scroll effect never
+     drags it out of position:fixed relative to the viewport. -->
+
+<!-- Quick-view modal: shared by every card. Clicking a card anywhere
+     except its own add-to-cart button opens this. -->
+<div class="quickview-overlay" id="quickview-overlay">
+  <div class="quickview-modal">
+    <button class="quickview-close" id="quickview-close">&times;</button>
+    <div class="quickview-photo">
+      <img id="qv-img" src="assets/recheio-3-raspberry-powdered.jpg" alt="">
+      <div id="qv-icon" class="combo-photo-icon" hidden></div>
+    </div>
+    <div class="quickview-body">
+      <h3 id="qv-name"></h3>
+      <p id="qv-desc"></p>
+      <p class="qv-price" id="qv-price"></p>
+      <button class="add-to-cart-btn" id="qv-add">Adicionar ao carrinho</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart drawer. #checkout-btn is a REAL <a> anchor with its href kept
+     in sync by renderCart() in script.js — never trigger navigation from
+     a JS click handler. That pattern gets silently blocked/blanked on
+     mobile inside a sandboxed iframe (e.g. the Claude Artifact preview);
+     a real anchor is what actually works both inside the preview and
+     once deployed for real. -->
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-header">
+    <h3>Seu carrinho</h3>
+    <button class="cart-drawer-close" id="cart-drawer-close">&times;</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-drawer-footer">
+    <p class="cart-total">Total: <strong id="cart-total">R$ 0,00</strong></p>
+    <a class="checkout-btn" id="checkout-btn" href="#" target="_blank" rel="noopener noreferrer">Fechar pedido pelo WhatsApp</a>
+  </div>
+</div>
+<div class="cart-overlay" id="cart-overlay"></div>
+
+<!-- Floating cart button: lets the customer check out without scrolling
+     back up to the header icon. Sibling of .page-wrap, see note above. -->
+<button class="cart-fab-floating" id="cart-fab-floating" aria-label="Ver carrinho">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.6a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+  <span class="cart-count">0</span>
+</button>
+
+<script src="js/script.js"></script>
+</body>
+</html>

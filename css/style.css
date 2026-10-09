@@ -1,0 +1,1201 @@
+/* ================================================================
+   Bem Querer Donuts — stylesheet.
+   Brand palette lives in the :root tokens below. The site is locked to
+   this light palette (color-scheme: light) on purpose: it is a fixed
+   brand identity, not a theme that should follow a dark OS setting.
+   ================================================================ */
+:root {
+  color-scheme: light;
+  --color-bg: #F7E9EE;
+  --color-primary: #F50078;
+  --color-primary-dark: #c90063;
+  --color-text: #171717;
+  --color-ink: #2a0f1c;          /* text on glass cards */
+  --color-ink-soft: #3f2532;     /* secondary text on glass cards */
+  --color-text-muted: #8a7680;
+  --card-border: rgba(245, 0, 120, 0.08);
+  --glass: rgba(255, 255, 255, 0.28);
+  --glass-strong: rgba(255, 255, 255, 0.42);
+  --glass-line: rgba(255, 255, 255, 0.55);
+  --glass-blur: blur(9px) saturate(150%);
+  --shadow-soft: 0 8px 22px rgba(90, 10, 45, 0.14);
+  --radius-card: 20px;
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+img { max-width: 100%; }
+
+/* ---------- Page-level "leveza" cue on nav scroll ----------
+   Was a filter:blur() on the whole page tree, which forces the browser
+   to GPU-blur the entire catalog (60+ cards) on every nav tap — the main
+   cause of the jank reported on phones. A plain opacity dim gives the
+   same "soft" cue for a fraction of the render cost (alpha blend, no
+   blur sampling of the whole subtree). */
+.page-wrap {
+  transition: opacity 0.18s ease;
+}
+
+.page-wrap.is-scrolling {
+  opacity: 0.92;
+}
+
+/* Light "press" feedback: a, button and product cards get this class
+   from script.js for a moment while pressed. transform-only (no filter)
+   so it's a pure compositor operation, cheap even on low-end phones. */
+.is-pressed {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.combo-item.is-pressed { transform: scale(0.985); }
+
+/* ---------- Site nav (floats over the hero photo) ---------- */
+
+.hero-block { position: relative; }
+
+.site-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+}
+
+.site-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 28px 18px;
+}
+
+/* Small logo, top-left of the nav — kept off the hero photo itself so
+   it never competes with the product shot behind it. */
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(90, 0, 40, 0.25));
+}
+
+.nav-links {
+  display: flex;
+  gap: 26px;
+  margin-right: auto;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  text-shadow: 0 1px 10px rgba(90, 0, 40, 0.35);
+  transition: border-color 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  border-bottom-color: rgba(255, 255, 255, 0.85);
+}
+
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 250px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-search:focus-within {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.nav-search svg { flex-shrink: 0; }
+
+.nav-search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.nav-search input::placeholder { color: rgba(255, 255, 255, 0.88); }
+
+.search-empty {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 28px 14px;
+  color: #fff;
+  font-size: 13px;
+  text-shadow: 0 1px 8px rgba(90, 0, 40, 0.5);
+}
+
+.nav-icons { display: flex; align-items: center; }
+
+.icon-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.icon-btn:hover { background: rgba(255, 255, 255, 0.32); }
+
+.cart-icon-btn .cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-icon-btn.pulse,
+.cart-fab-floating.pulse { animation: pulse 0.35s ease; }
+
+/* Floating cart button — check out from anywhere on the page. */
+.cart-fab-floating {
+  position: fixed;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  right: 22px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(245, 0, 120, 0.4);
+  cursor: pointer;
+  z-index: 90;
+  transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.cart-fab-floating:hover { background: var(--color-primary-dark); }
+
+.cart-fab-floating .cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 11.5px;
+  font-weight: 800;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Hero: full-bleed, no frame ----------
+   Phone (the client's mockup): photo fills the screen, logo on top,
+   headline + glass buttons at the bottom. A blurred copy of the same
+   photo sits behind it, and the sharp photo fades into it at the top so
+   there is clear space for the logo. */
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  max-height: 1000px;
+  overflow: hidden;
+  background: #f1a5bd url('../assets/hero-bg-blur.jpg') center / cover no-repeat;
+}
+
+.hero-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 86%;
+  object-fit: cover;
+  object-position: 50% 58%;
+  transform-origin: 50% 70%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%);
+  will-change: transform;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(150, 10, 70, 0) 45%,
+    rgba(150, 10, 70, 0.42) 76%,
+    rgba(115, 0, 55, 0.72) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  padding: calc(88px + env(safe-area-inset-top, 0px)) 22px calc(46px + env(safe-area-inset-bottom, 0px));
+  will-change: opacity, transform;
+}
+
+.hero-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 620px;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(90, 0, 40, 0.4);
+}
+
+.hero-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  color: #fff;
+  font-size: clamp(34px, 9vw, 60px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-shadow: 0 4px 28px rgba(90, 0, 40, 0.4);
+}
+
+.hero-title em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  color: #ffd9ea;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Glass buttons: translucent, blurred, sitting on the photo itself. */
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 156px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 8px 26px rgba(110, 0, 50, 0.18);
+  transition: background 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+}
+
+.btn-glass:hover { background: rgba(255, 255, 255, 0.28); }
+
+.btn-glass-primary { background: rgba(245, 0, 120, 0.36); }
+.btn-glass-primary:hover { background: rgba(245, 0, 120, 0.5); }
+
+/* Desktop: the portrait photo would be cropped to a sliver if it filled
+   a wide screen, so it bleeds off the right edge (no frame, soft fade on
+   its left side) over the blurred copy, with the text on the left. */
+@media (min-width: 900px) {
+  .hero {
+    height: min(100svh, 880px);
+    min-height: 640px;
+  }
+  .hero-bg {
+    top: 0;
+    left: auto;
+    width: 60%;
+    height: 100%;
+    object-position: 50% 50%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 34%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 34%);
+  }
+  .hero-scrim {
+    background: linear-gradient(
+      to right,
+      rgba(140, 10, 65, 0.38) 0%,
+      rgba(140, 10, 65, 0.14) 45%,
+      rgba(140, 10, 65, 0) 70%
+    );
+  }
+  .hero-content {
+    max-width: 1240px;
+    margin: 0 auto;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: left;
+    gap: 30px;
+    padding: 110px 48px 70px;
+  }
+  .hero-bottom {
+    align-items: flex-start;
+    max-width: 540px;
+  }
+  .hero-title { font-size: clamp(42px, 4.6vw, 66px); }
+  .hero-buttons { justify-content: flex-start; }
+}
+
+@media (max-width: 899px) {
+  .nav-links { display: none; }
+  .nav-search { flex: 1 1 auto; width: auto; }
+  .site-nav-inner { padding-left: 18px; padding-right: 18px; }
+}
+
+/* ---------- Catalog ---------- */
+
+.catalog { position: relative; }
+
+/* One full-screen photo that stays put behind every category while the
+   catalog scrolls (sticky + negative margin; background-attachment:fixed
+   is ignored on phones). The translucent cards show it through them. */
+.catalog-bg {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100lvh;
+  margin-bottom: -100vh;
+  margin-bottom: -100lvh;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 214, 228, 0.22), rgba(150, 30, 85, 0.24)),
+    url('../assets/flavors-bg.jpg') center / cover no-repeat,
+    #e9a3b8;
+}
+
+/* Category quick-nav — same category row as the shop's ordering site. */
+.category-nav {
+  /* No backdrop-filter: it's sticky, so the browser would re-sample the
+     blur every scroll frame for as long as the catalog is on screen. A
+     near-solid fill looks almost identical and costs nothing on scroll. */
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: rgba(255, 245, 249, 0.92);
+  border-bottom: 1px solid var(--glass-line);
+}
+
+.category-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 11px 24px;
+}
+
+.category-nav-inner::-webkit-scrollbar { display: none; }
+
+.category-nav a {
+  flex-shrink: 0;
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 15px;
+  border-radius: 999px;
+  transition: background 0.25s ease, color 0.25s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.category-nav a:hover { background: rgba(255, 255, 255, 0.8); }
+
+.category-nav a.is-active {
+  background: var(--color-primary);
+  border-color: transparent;
+  color: #fff;
+}
+
+.flavors {
+  position: relative;
+  z-index: 1;
+  padding: 34px 0 6px;
+  scroll-margin-top: 60px;
+}
+
+.flavors:last-of-type { padding-bottom: 60px; }
+
+.flavors-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.flavors-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.flavors-header h2 {
+  color: #fff;
+  font-size: clamp(21px, 5.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.15;
+  text-shadow: 0 2px 14px rgba(90, 0, 40, 0.45);
+}
+
+.flavors-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.flavors.fits .flavors-actions { display: none; }
+
+.carousel-nav { display: none; gap: 6px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .carousel-nav { display: flex; }
+}
+
+.flavors.is-expanded .carousel-nav { display: none; }
+
+.carousel-nav button,
+.view-all-btn {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  cursor: pointer;
+  transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-nav button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.view-all-btn {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.carousel-nav button:hover,
+.view-all-btn:hover { background: rgba(255, 255, 255, 0.34); }
+
+/* Carousel track: swipe one by one (scroll-snap). The track bleeds to
+   the screen edge so the next card peeks in and invites the swipe. */
+.flavors-grid {
+  --card-w: 178px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 24px;
+  scrollbar-width: none;
+  margin: 0 -24px;
+  padding: 6px 24px 24px;
+}
+
+.flavors-grid::-webkit-scrollbar { display: none; }
+
+.flavors-grid > .combo-item {
+  flex: 0 0 var(--card-w);
+  scroll-snap-align: start;
+}
+
+/* "Ver todos": the same cards laid out as a grid. */
+.flavors-grid.expanded {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  overflow: visible;
+  margin: 0;
+  padding: 6px 0 24px;
+}
+
+.flavors-grid.expanded > .combo-item { flex: initial; }
+
+@media (max-width: 560px) {
+  .flavors-grid { --card-w: 50vw; gap: 10px; }
+  .flavors-grid.expanded {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .flavors-grid.expanded .combo-item { padding: 14px 10px 12px; }
+}
+
+/* ---------- Product card: translucent glass ---------- */
+
+.combo-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+  cursor: pointer;
+  padding: 13px 10px 12px;
+  border-radius: var(--radius-card);
+  /* No backdrop-filter here on purpose: this renders 50+ times per page
+     (one per catalog item), and a real-time GPU blur sample on every one
+     of them at once is what was causing the scroll/tap jank on phones.
+     A plain translucent fill reads as "glass" almost as well, for free. */
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s var(--ease-soft), background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.combo-item:hover {
+  background: rgba(255, 255, 255, 0.86);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(90, 10, 45, 0.2);
+}
+
+.combo-photo {
+  width: 74%;
+  max-width: 128px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 12px;
+}
+
+.combo-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 10px 20px rgba(90, 10, 45, 0.25);
+}
+
+.combo-photo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 46px;
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 10px 20px rgba(90, 10, 45, 0.2);
+}
+
+.combo-item h4 {
+  color: var(--color-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.combo-desc {
+  color: var(--color-ink-soft);
+  font-size: 11.5px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.combo-price {
+  margin-top: auto;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--color-primary);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+/* Combos whose price wasn't in the source data: an inquire label, and
+   the button is a plain wa.me link, never a cart entry. */
+.combo-price-inquire {
+  background: none;
+  color: var(--color-ink-soft);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 12.5px;
+  padding: 0;
+}
+
+.add-to-cart-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(245, 0, 120, 0.28);
+  transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.add-to-cart-btn:hover { background: var(--color-primary-dark); }
+.add-to-cart-btn.added { background: #3fa85c; }
+
+/* ---------- Promo banner ---------- */
+
+.promo-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  padding: 64px 24px;
+}
+
+.promo-banner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 56px;
+}
+
+.promo-banner-eyebrow {
+  display: inline-block;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.promo-banner-text h2 {
+  color: #fff;
+  font-weight: 600;
+  font-size: clamp(28px, 3.6vw, 42px);
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+
+.promo-banner-text p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 400px;
+  margin-bottom: 26px;
+}
+
+.btn-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  padding: 15px 26px;
+  border-radius: 999px;
+  transition: background 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-call:hover { background: #fff0f7; }
+
+/* Sized to read as "the news" — big enough to be the thing the eye
+   lands on first in this section, not a small thumbnail beside the
+   text (the client specifically asked for this to be much larger). */
+.promo-banner-media {
+  width: 460px;
+  flex-shrink: 0;
+}
+
+.promo-banner-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: 32px;
+  border: 7px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 36px 70px rgba(0, 0, 0, 0.38);
+}
+
+@media (max-width: 760px) {
+  .promo-banner-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 30px;
+  }
+  .promo-banner-text p { margin-left: auto; margin-right: auto; }
+  .promo-banner-media { width: min(360px, 92vw); }
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  background: #2a0b1a;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 46px 24px calc(26px + env(safe-area-inset-bottom, 0px));
+}
+
+.site-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 30px;
+}
+
+.footer-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.footer-brand p {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.site-footer h5 {
+  font-family: 'Fraunces', Georgia, serif;
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+.site-footer p,
+.site-footer a {
+  font-size: 13px;
+  line-height: 1.8;
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-footer a:hover { color: #fff; }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 34px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 760px) {
+  .site-footer-inner { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .site-footer-inner { grid-template-columns: 1fr; }
+}
+
+/* ---------- Quick-view modal ---------- */
+
+.quickview-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(60, 10, 30, 0.34);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.quickview-overlay.open {
+  display: flex;
+  animation: fade-soft 0.16s ease both;
+}
+
+.quickview-modal {
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+  padding: 30px 26px 26px;
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(165deg, rgba(255, 205, 227, 0.92), rgba(255, 255, 255, 0.86));
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 24px 60px rgba(60, 10, 30, 0.28);
+}
+
+.quickview-overlay.open .quickview-modal {
+  animation: modal-in 0.18s var(--ease-soft) both;
+}
+
+.quickview-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.quickview-photo {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(245, 0, 120, 0.2);
+}
+
+.quickview-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quickview-photo #qv-icon {
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
+}
+
+.quickview-body h3 {
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.quickview-body p {
+  color: #5a4a50;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.quickview-body .qv-price {
+  color: var(--color-primary);
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 19px;
+}
+
+/* ---------- Cart drawer ---------- */
+
+.cart-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(60, 10, 30, 0.3);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.cart-overlay.open {
+  display: block;
+  animation: fade-soft 0.16s ease both;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 340px;
+  max-width: 88vw;
+  height: 100%;
+  background: #fff;
+  border-left: 1px solid var(--card-border);
+  z-index: 96;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  transition: right 0.2s var(--ease-soft);
+}
+
+.cart-drawer.open { right: 0; }
+
+.cart-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(22px + env(safe-area-inset-top, 0px)) 20px 22px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.cart-drawer-header h3 {
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cart-drawer-close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+}
+
+.cart-empty {
+  color: var(--color-text-muted);
+  font-size: 13.5px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.cart-item-info { flex: 1; min-width: 0; }
+
+.cart-item-name {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cart-item-price {
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.qty-btn:hover { border-color: var(--color-primary); }
+
+.cart-item-qty {
+  color: var(--color-text);
+  font-size: 13px;
+  min-width: 14px;
+  text-align: center;
+}
+
+.cart-item-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.cart-item-remove:hover { color: var(--color-primary); }
+
+.cart-drawer-footer {
+  padding: 18px 20px 22px;
+  border-top: 1px solid var(--card-border);
+}
+
+.cart-total {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.cart-total strong {
+  color: var(--color-text);
+  font-size: 17px;
+}
+
+.checkout-btn {
+  display: block;
+  width: 100%;
+  background: var(--color-primary);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  border-radius: 12px;
+  padding: 14px 10px;
+  transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.checkout-btn:hover { background: var(--color-primary-dark); }
+
+.checkout-btn.disabled {
+  background: #e5c3d4;
+  pointer-events: none;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes fade-soft {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes reveal-soft {
+  from { opacity: 0.25; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rise-soft {
+  from { transform: translateY(30px); }
+  to { transform: none; }
+}
+
+/* Category titles drift in out of a soft blur as they scroll into view.
+   Scroll-driven, so without support everything is simply visible. The
+   card track only slides (no blur/opacity): a filter on an ancestor
+   would cut off the cards' frosted-glass backdrop while animating. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .flavors-header,
+    .promo-banner-inner {
+      animation: reveal-soft linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    .flavors-grid {
+      animation: rise-soft linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .page-wrap.is-scrolling,
+  .is-pressed { filter: none; transform: none; }
+  .quickview-overlay.open,
+  .quickview-overlay.open .quickview-modal,
+  .cart-overlay.open { animation: none; }
+}
