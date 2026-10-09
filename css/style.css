@@ -32,7 +32,11 @@
    position:sticky descendant below it (the catalog's sticky background,
    the sticky category nav) because they'd stick to body's box instead of
    the viewport. html doesn't have this problem. */
-html { scroll-behavior: smooth; overflow-x: hidden; }
+/* touch-action: manipulation disables the double-tap-to-zoom gesture
+   (the "zoom" that fired when someone tapped a card/button a bit too
+   fast) while still allowing normal scrolling — belt-and-suspenders
+   with the viewport meta's user-scalable=no. */
+html { scroll-behavior: smooth; overflow-x: hidden; touch-action: manipulation; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
@@ -644,15 +648,17 @@ img { max-width: 100%; }
   /* No backdrop-filter here on purpose: this renders 50+ times per page
      (one per catalog item), and a real-time GPU blur sample on every one
      of them at once is what was causing the scroll/tap jank on phones.
-     A plain translucent fill reads as "glass" almost as well, for free. */
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid var(--glass-line);
+     A plain translucent pink fill — same idea as .btn-glass on the hero,
+     just tinted instead of white — reads as "glass" almost as well, for
+     free, and lets the background photo show through. */
+  background: rgba(255, 205, 227, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: var(--shadow-soft);
   transition: transform 0.25s var(--ease-soft), background 0.25s ease, box-shadow 0.25s ease;
 }
 
 .combo-item:hover {
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 205, 227, 0.54);
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(90, 10, 45, 0.2);
 }
@@ -690,6 +696,7 @@ img { max-width: 100%; }
   font-weight: 600;
   line-height: 1.25;
   margin-bottom: 4px;
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.5);
 }
 
 .combo-desc {
