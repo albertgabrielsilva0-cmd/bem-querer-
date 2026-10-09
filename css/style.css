@@ -27,6 +27,11 @@
 
 [hidden] { display: none !important; }
 
+/* overflow-x: hidden lives ONLY on html, never on body — body having its
+   own overflow turns it into a new scroll container, which breaks every
+   position:sticky descendant below it (the catalog's sticky background,
+   the sticky category nav) because they'd stick to body's box instead of
+   the viewport. html doesn't have this problem. */
 html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
@@ -34,8 +39,6 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
-  max-width: 100vw;
 }
 
 h1, h2, h3, h4 {
@@ -430,7 +433,11 @@ img { max-width: 100%; }
 
 @media (max-width: 899px) {
   .nav-links { display: none; }
-  .nav-search { flex: 1 1 auto; width: auto; }
+  /* min-width: 0 is required here — a flex item's default minimum size is
+     its content's natural width, not 0, so without this the search pill
+     refuses to shrink and pushes the cart icon off the right edge of the
+     screen on narrow phones. */
+  .nav-search { flex: 1 1 auto; width: auto; min-width: 0; }
   .site-nav-inner { padding-left: 18px; padding-right: 18px; }
 }
 
