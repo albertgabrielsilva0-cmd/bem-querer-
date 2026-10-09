@@ -27,13 +27,15 @@
 
 [hidden] { display: none !important; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 h1, h2, h3, h4 {
@@ -212,10 +214,10 @@ img { max-width: 100%; }
 /* Floating cart button — check out from anywhere on the page. */
 .cart-fab-floating {
   position: fixed;
-  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
-  right: 22px;
-  width: 56px;
-  height: 56px;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   background: var(--color-primary);
   color: #fff;
@@ -223,11 +225,13 @@ img { max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 24px rgba(245, 0, 120, 0.4);
+  box-shadow: 0 10px 26px rgba(245, 0, 120, 0.5);
   cursor: pointer;
   z-index: 90;
   transition: background 0.2s ease, filter 0.2s ease, transform 0.2s ease;
 }
+
+.cart-fab-floating svg { width: 26px; height: 26px; }
 
 .cart-fab-floating:hover { background: var(--color-primary-dark); }
 
